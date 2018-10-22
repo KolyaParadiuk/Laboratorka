@@ -29,6 +29,8 @@ public:
 	int get_size();
 
 
+	void method_gaussa();
+
 
 
 

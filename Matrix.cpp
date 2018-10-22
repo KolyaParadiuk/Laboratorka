@@ -143,6 +143,10 @@ int Matrix::get_size()
 	return this->M_size;
 }
 
+void Matrix::method_gaussa()
+{
+}
+
 Matrix operator~(Matrix that)
 {
 	int k = that.M_size -1, n=0;
