@@ -106,7 +106,11 @@ Matrix Matrix::operator*(const Matrix & that)
 	{
 		for (int j = 0; j < that.M_size; j++)
 
-			temp.M[i][j] = this->M[i][j] * that.M[i][j];
+			for (int k = 0; k < that.M_size; k++)
+			{
+				temp.M[i][j] += this->M[i][k] * that.M[k][j];
+			}
+			
 
 
 	}
