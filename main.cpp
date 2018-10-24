@@ -9,11 +9,13 @@ using namespace std;
 int main()
 {
 	int N=3;
-	Matrix data(N,1);
+	Matrix data(N,N+1);
 	Matrix data2(N,1);
 	//cin >>data;
 
-	cout << data*data2;
+	cout << data<<endl;
+	cout << ~data;
+
 
 	system("pause");
 	return 0;
