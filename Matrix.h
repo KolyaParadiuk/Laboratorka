@@ -36,7 +36,7 @@ public:
 	void method_gaussa();
 	Matrix method_kachmaga(Matrix);
 
-
+	Matrix chek_answer(Matrix,Matrix);
 
 };
 

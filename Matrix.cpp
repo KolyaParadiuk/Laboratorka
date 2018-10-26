@@ -24,7 +24,7 @@ Matrix::Matrix(int m,int n)
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
-			M[i][j] = rand();
+			M[i][j] = 1 + rand() % 100;;
 	}
 
 }
@@ -145,20 +145,26 @@ Matrix Matrix::operator-( Matrix & that)
 
 Matrix Matrix::operator*( Matrix & that)
 {
-	Matrix temp(that.M_size, 0);
 
-	for (int i = 0; i < that.M_size; i++)
+	Matrix temp(that.M_size,that.N_size, 0);
+
+	if (that.M_size == this->M_size && that.N_size == this->N_size)
 	{
-		for (int j = 0; j < that.M_size; j++)
-
-			for (int k = 0; k < that.M_size; k++)
+		for (int i = 0; i < that.M_size; i++)
 			{
-				temp.M[i][j] += this->M[i][k] * that.M[k][j];
-			}
+				for (int j = 0; j < that.N_size; j++)
+
+					for (int k = 0; k < that.M_size; k++)
+					{
+						temp.M[i][j] += this->M[i][k] * that.M[k][j];
+					}
 			
 
 
+			}
 	}
+
+	
 	return temp;
 }
 
@@ -214,11 +220,11 @@ void Matrix::method_gaussa()
 
 Matrix Matrix::method_kachmaga(Matrix b)
 {
-	const double E = 0.00001;
+	const double E = 0.00000000001;
 
 	Matrix x(*this, 0);
 	Matrix x1(1,N_size,0);
-	cout << x;
+	
 	
 	Matrix sub(1, N_size, 1);
 	int j=0;
@@ -234,7 +240,7 @@ Matrix Matrix::method_kachmaga(Matrix b)
 		x1 = x + ai;
 		sub = x1-x;
 	
-		cout << sub.norma()<<endl;
+	//	cout << sub.norma()<<endl;
 		x = x1;
 		if (j < N_size-1)
 			j++;
@@ -248,6 +254,33 @@ Matrix Matrix::method_kachmaga(Matrix b)
 
 	return x;
 
+}
+
+Matrix Matrix::chek_answer(Matrix b, Matrix x)
+{
+	Matrix res(1, this->N_size, 0);
+	double temp=0;
+	
+	
+	for (int i=0;i<M_size;i++)
+	{
+		
+			
+		for (int j = 0; j < N_size; j++)
+		{
+
+			temp += this->M[i][j] * x.M[0][j];
+		
+		}
+
+		res.M[0][i] = temp - b[0][i];
+
+		temp = 0;
+
+	}
+
+	return res;
+	
 }
 
 Matrix operator~(Matrix that)
@@ -277,7 +310,7 @@ ostream & operator<<(ostream & os, const Matrix & that)
 		os << '|';
 		for (int j = 0; j < that.N_size; j++)
 			os << that.M[i][j] << ' ';
-		os << '|' ;
+		os << '|' <<endl;
 
 	}
 
