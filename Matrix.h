@@ -33,7 +33,7 @@ public:
 	double norma();
 	double skal_dob(Matrix&);
 
-	void method_gaussa();
+	Matrix method_gaussa(Matrix );
 	Matrix method_kachmaga(Matrix);
 
 	Matrix chek_answer(Matrix,Matrix);

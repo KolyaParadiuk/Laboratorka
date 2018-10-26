@@ -1,7 +1,6 @@
 #include "Matrix.h"
 #include <iostream>
 
-
 using namespace std;
 
 Matrix::Matrix()
@@ -96,8 +95,6 @@ Matrix& Matrix::operator=( const Matrix& that)
 	}
 	return *this;
 }
-
-
 
 bool Matrix::operator==( Matrix & that)
 {
@@ -214,8 +211,36 @@ double Matrix::skal_dob(Matrix &that)
 	return temp;
 }
 
-void Matrix::method_gaussa()
+Matrix Matrix::method_gaussa(Matrix b)
 {
+	double f;
+	for (int k = 0; k < N_size-1; k++)
+	{		
+		for (int i = k; i < M_size-1; i++)
+		{
+			f = this->M[i+1][k] / this->M[k][k];
+			for (int j = k; j < N_size; j++)
+			{
+				this->M[i+1][j] = this->M[i + 1][j] - this->M[k][j] * f;
+
+			}
+			b[0][i + 1] = b[0][i + 1]- b[0][i] * f;
+		}
+		cout << *this<<endl;
+	}
+	Matrix temp(1, N_size, 0);
+	for (int i = M_size - 1; i > 0; i--)
+	{
+		temp[0][i] = b[0][i] / this->M[i][i];
+		for (int j = N_size - 1; j >=i ; j--)
+		{
+			b.M[0][i - 1] = b[0][i-1]- this->M[i - 1][j] * temp[0][j];
+
+		}
+	}
+	temp[0][0]=b[0][0]/ this->M[0][0];
+
+	return temp;
 }
 
 Matrix Matrix::method_kachmaga(Matrix b)
