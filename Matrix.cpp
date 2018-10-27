@@ -23,7 +23,7 @@ Matrix::Matrix(int m,int n)
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
-			M[i][j] = 1 + rand() % 100;;
+			M[i][j] = (1 + rand() % 1000)*pow(-1,rand());
 	}
 
 }
@@ -226,7 +226,6 @@ Matrix Matrix::method_gaussa(Matrix b)
 			}
 			b[0][i + 1] = b[0][i + 1]- b[0][i] * f;
 		}
-		cout << *this<<endl;
 	}
 	Matrix temp(1, N_size, 0);
 	for (int i = M_size - 1; i > 0; i--)

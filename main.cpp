@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	int N=8;
+	int N=2;
 	
 
 	Matrix A(N,N);
