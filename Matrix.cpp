@@ -3,6 +3,20 @@
 
 using namespace std;
 
+bool Matrix::isSimmetrial()
+{
+
+	for (int i = 0; i < M_size; i++)
+	{
+		for (int j = i + 1; j < N_size; j++)
+		{
+			if (this->M[i][j] != this->M[j][i]) 		return false;
+		}
+	}
+	return true;
+	
+}
+
 Matrix::Matrix()
 {
 	M = NULL;
@@ -83,6 +97,31 @@ Matrix::Matrix(Matrix & that , int k)
 
 }
 
+void Matrix::set_simetrial_matrix()
+{
+	for (int i = 0; i < M_size; i++)
+	{
+		for (int j = i; j < N_size; j++)
+			M[i][j] =M[j][i]=  (1 + rand() % 1000)*pow(-1, rand());
+	}
+}
+
+void Matrix::set_one_matrix()
+{
+	for (int i = 0; i < M_size; i++)
+	{
+
+		for (int j = i; j < N_size; j++)
+		{
+			
+			 M[i][j] = 0;
+			 M[j][i] = 0;
+		}
+		M[i][i] = 1;
+	}
+}
+
+
 Matrix& Matrix::operator=( const Matrix& that)
 {
 	
@@ -92,6 +131,17 @@ Matrix& Matrix::operator=( const Matrix& that)
 		for (int j = 0; j < that.N_size; j++)
 		this->M[i][j] = that.M[i][j];
 		
+	}
+	return *this;
+}
+
+Matrix& Matrix::operator=(const double& that)
+{
+	for (int i = 0; i < this->M_size; i++)
+	{
+		for (int j = 0; j < this->N_size; j++)
+			this->M[i][j] = that;
+	
 	}
 	return *this;
 }
@@ -189,11 +239,6 @@ double* Matrix::operator[](int i)
 	return M[i];
 }
 
-int Matrix::get_size()
-{
-	return this->M_size;
-}
-
 double Matrix::norma()
 {
 	double temp=0;
@@ -264,7 +309,6 @@ Matrix Matrix::method_kachmaga(Matrix b)
 		x1 = x + ai;
 		sub = x1-x;
 	
-	//	cout << sub.norma()<<endl;
 		x = x1;
 		if (j < N_size-1)
 			j++;
@@ -279,6 +323,112 @@ Matrix Matrix::method_kachmaga(Matrix b)
 	return x;
 
 }
+
+double Matrix::find_fault(double &fault)
+{
+	fault = 0;
+	for (int i = 0; i < M_size; i++)
+	{
+		for (int j = i + 1; j < N_size; j++)
+		{
+
+			fault +=  M[i][j] * M[i][j];
+		}
+	}
+	fault = sqrt(2 * fault);
+	return fault;
+}
+
+void  Matrix::find_max(int & maxI, int& maxJ)
+{
+	double max=0.0;
+	for (int i = 0; i < M_size; i++)
+	{
+		for (int j = i + 1; j < N_size; j++)
+		{
+			if (this->M[i][j] > 0 && this->M[i][j] > max)
+			{
+				max = this->M[i][j];
+				maxI = i;
+				maxJ = j;
+			}
+			else if (this->M[i][j] < 0 && -this->M[i][j] > max)
+			{
+				max = -this->M[i][j];
+				maxI = i;
+				maxJ = j;
+			}
+		}
+	}
+}
+
+void Matrix::prepare_turn_matrix(const int& maxI, const int& maxJ,Matrix &turn_matr)
+{
+	turn_matr.set_one_matrix();
+	if (this->M[maxI][maxI] == this->M[maxJ][maxJ])
+	{
+		turn_matr.M[maxI][maxI] = turn_matr.M[maxJ][maxJ] = turn_matr.M[maxJ][maxI] = sqrt(2.0) / 2.0;
+		turn_matr.M[maxI][maxJ] = -sqrt(2.0) / 2.0;
+	}
+	else
+	{
+		double  fi = 0.5 * atan((2.0 * this->M[maxI][maxJ]) / (this->M[maxI][maxI] - this->M[maxJ][maxJ]));
+		turn_matr.M[maxI][maxI] = turn_matr.M[maxJ][maxJ] = cos(fi);
+		turn_matr.M[maxI][maxJ] = -sin(fi);
+		turn_matr.M[maxJ][maxI] = sin(fi);
+	}
+}
+
+Matrix Matrix::method_yakoby()
+{
+	int maxI=0, maxJ=0,i=0;
+	double fault=0.0;
+	Matrix turn_matr(M_size,N_size,0);
+	Matrix temp(M_size, N_size, 0);
+	double precision = 0.0001;
+
+	if (!isSimmetrial())
+	{
+		cout << "Матрица не симметричная";
+		
+	}
+	else
+	{
+		this->find_fault(fault);
+		while (fault > precision)
+
+		{
+			//cout <<"i=    "<< i<<endl;
+				//cout <<"fault=  " <<fault<<endl;
+			this->find_max(maxI, maxJ);
+			this->prepare_turn_matrix(maxI,maxJ,turn_matr);
+			//cout <<"trurn matrix"<<endl <<turn_matr;
+			temp = 0.0;
+			temp = (~turn_matr)*(*this);
+			*this = 0;
+			*this = temp * turn_matr;
+		
+			this->find_fault(fault);
+			//cout <<"matrix "<<endl<< *this;
+			i++;
+			//if (i > 10)break;
+			//cout << "===================="<<endl;
+		}
+	}
+	
+	for (int i = 0; i < M_size; i++)
+	{
+		for (int j = 0; j < N_size; j++)
+		{
+			if (abs(this->M[i][j]) < precision)
+				this->M[i][j] = 0;
+			
+		}
+	}
+
+	return *this;
+}
+
 
 Matrix Matrix::chek_answer(Matrix b, Matrix x)
 {
@@ -305,6 +455,16 @@ Matrix Matrix::chek_answer(Matrix b, Matrix x)
 
 	return res;
 	
+}
+
+int Matrix::get_X_size()
+{
+	return N_size;
+}
+
+int Matrix::get_Y_size()
+{
+	return M_size;
 }
 
 Matrix operator~(Matrix that)

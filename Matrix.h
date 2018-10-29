@@ -11,14 +11,19 @@ private:
 	int M_size;
 	int N_size;
 
+	bool isSimmetrial();
+
 public: 
 	Matrix();
 	Matrix(int,int);
 	Matrix(int,int ,double);
 	Matrix(Matrix&);
 	Matrix(Matrix&,int);
+	void set_simetrial_matrix();
+	void set_one_matrix();
+	
 	Matrix& operator =( const Matrix& M1);
-
+	Matrix & operator=(const double & that);
 	bool operator == ( Matrix &M1);
 	Matrix operator + ( Matrix &that);
 	Matrix operator - ( Matrix &that);
@@ -28,15 +33,21 @@ public:
 	friend Matrix operator ~(Matrix that);
 	friend ostream & operator<<(ostream & os, const Matrix & that);
 	friend istream & operator>>(istream & os, const Matrix & that);
-	int get_size();
-
+	
 	double norma();
 	double skal_dob(Matrix&);
+	Matrix chek_answer(Matrix,Matrix);
+
+	int get_X_size();
+	int get_Y_size();
 
 	Matrix method_gaussa(Matrix );
 	Matrix method_kachmaga(Matrix);
-
-	Matrix chek_answer(Matrix,Matrix);
+	double find_fault(double &);
+	void find_max(int &, int &);
+	void prepare_turn_matrix(const int & Imax, const int & Jmax,Matrix& );
+	Matrix method_yakoby();
+	
 
 };
 
