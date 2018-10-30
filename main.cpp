@@ -22,12 +22,12 @@ int main()
 	//cout << result;
 	//cout << test1.chek_answer(B1, result).norma() << endl << " +++++++++++++++++++++++++++ " << endl;
 
-
-	Matrix coef(1,2);
-	Matrix coef2(10, 2);
-	cin >> coef;
-	cout << coef << endl;
-	coef2=prepare_test_values(10, coef);
+	int N=20;
+	int M = 5;
+	Matrix coef(1,M);
+	Matrix coef2(N, M,0);
+	cout<< coef;
+	coef2=prepare_test_values(N, coef);
 	cout << coef2<<endl;
 	Linear_regression(coef2);
 	system("pause");

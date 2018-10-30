@@ -37,7 +37,7 @@ Matrix::Matrix(int m,int n)
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
-			M[i][j] = (1 + rand() % 10000)*pow(-1,rand());
+			M[i][j] = (1 + rand() % 1000)*pow(-1, rand());
 	}
 
 }
@@ -270,7 +270,7 @@ Matrix Matrix::method_gaussa(Matrix b)
 
 			}
 			b[0][i] = b[0][i ]*f- b[0][k] ;
-			cout << *this<<endl;
+	
 		}
 		
 	}
@@ -525,7 +525,7 @@ Matrix prepare_test_values(int number_of_values,Matrix &coefficients)
 
 		}
 		test_values[i][0] += coefficients[0][0] ;
-		//test_values[i][0] += ((rand()%10))*pow(-1, rand());
+		test_values[i][0] += ((rand()%5))*pow(-1, rand());
 		
 
 	}
@@ -571,7 +571,7 @@ void Linear_regression(Matrix test_values)
 
 	for (int i = 1; i < test_values.get_X_size(); i++)
 	{
-		for (int j = 0; j < test_values.get_X_size(); j++)
+		for (int j = 0; j < test_values.get_Y_size(); j++)
 		{
 			
 			F[0][i] += test_values[j][0]*test_values[j][i];
@@ -580,8 +580,8 @@ void Linear_regression(Matrix test_values)
 	cout << "f=  "<<F;
 	
 	Matrix result(1, A.get_X_size(),0);
-   result =  A.method_gaussa(F);
-   cout <<"result=  "<< result;
-	cout << "chek answer=  "<<A.chek_answer(F,result).norma();
+    result =  A.method_gaussa(F);
+    cout <<"result=  " << result;
+    cout << "chek answer=  "<<A.chek_answer(F,result).norma();
 
 }
