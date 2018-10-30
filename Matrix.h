@@ -51,3 +51,5 @@ public:
 
 };
 
+Matrix prepare_test_values(int number_of_values, Matrix &coefficients);
+void Linear_regression(Matrix test_values);

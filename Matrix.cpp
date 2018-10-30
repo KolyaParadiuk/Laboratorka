@@ -37,7 +37,7 @@ Matrix::Matrix(int m,int n)
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
-			M[i][j] = (1 + rand() % 1000)*pow(-1,rand());
+			M[i][j] = (1 + rand() % 10000)*pow(-1,rand());
 	}
 
 }
@@ -261,16 +261,18 @@ Matrix Matrix::method_gaussa(Matrix b)
 	double f;
 	for (int k = 0; k < N_size-1; k++)
 	{		
-		for (int i = k; i < M_size-1; i++)
+		for (int i = k+1; i < M_size; i++)
 		{
-			f = this->M[i+1][k] / this->M[k][k];
-			for (int j = k; j < N_size; j++)
+			f = this->M[k][k] / this->M[i][k];
+			for (int j = 0; j <=N_size; j++)
 			{
-				this->M[i+1][j] = this->M[i + 1][j] - this->M[k][j] * f;
+				this->M[i][j] = this->M[i][j]*f - this->M[k][j];
 
 			}
-			b[0][i + 1] = b[0][i + 1]- b[0][i] * f;
+			b[0][i] = b[0][i ]*f- b[0][k] ;
+			cout << *this<<endl;
 		}
+		
 	}
 	Matrix temp(1, N_size, 0);
 	for (int i = M_size - 1; i > 0; i--)
@@ -304,11 +306,12 @@ Matrix Matrix::method_kachmaga(Matrix b)
 		Matrix ai(*this, j);
 	
 		double temp =  ((b.M[0][j] - ai.skal_dob(x)) / (ai.norma()*ai.norma()));
+		
 	
 		ai=ai * temp;
 		x1 = x + ai;
 		sub = x1-x;
-	
+		
 		x = x1;
 		if (j < N_size-1)
 			j++;
@@ -316,9 +319,6 @@ Matrix Matrix::method_kachmaga(Matrix b)
 
 		
 	}
-
-
-
 
 	return x;
 
@@ -381,7 +381,7 @@ void Matrix::prepare_turn_matrix(const int& maxI, const int& maxJ,Matrix &turn_m
 
 Matrix Matrix::method_yakoby()
 {
-	int maxI=0, maxJ=0,i=0;
+	int maxI = 0, maxJ = 0;
 	double fault=0.0;
 	Matrix turn_matr(M_size,N_size,0);
 	Matrix temp(M_size, N_size, 0);
@@ -398,21 +398,18 @@ Matrix Matrix::method_yakoby()
 		while (fault > precision)
 
 		{
-			//cout <<"i=    "<< i<<endl;
-				//cout <<"fault=  " <<fault<<endl;
+			
 			this->find_max(maxI, maxJ);
 			this->prepare_turn_matrix(maxI,maxJ,turn_matr);
-			//cout <<"trurn matrix"<<endl <<turn_matr;
+			
 			temp = 0.0;
 			temp = (~turn_matr)*(*this);
 			*this = 0;
 			*this = temp * turn_matr;
 		
 			this->find_fault(fault);
-			//cout <<"matrix "<<endl<< *this;
-			i++;
-			//if (i > 10)break;
-			//cout << "===================="<<endl;
+			
+			
 		}
 	}
 	
@@ -515,4 +512,76 @@ istream & operator>>(istream & os, const Matrix & that)
 	return os;
 }
 
+Matrix prepare_test_values(int number_of_values,Matrix &coefficients)
+{
 
+	Matrix test_values(number_of_values,coefficients.get_X_size(),0);
+	for (int i = 0; i < number_of_values; i++)
+	{
+		for (int j = 1; j < coefficients.get_X_size(); j++)
+		{
+			test_values[i][j] = (1 + rand() % 1000)*pow(-1, rand());
+			test_values[i][0] += test_values[i][j] * coefficients[0][j];
+
+		}
+		test_values[i][0] += coefficients[0][0] ;
+		//test_values[i][0] += ((rand()%10))*pow(-1, rand());
+		
+
+	}
+
+	return test_values;
+	
+}
+
+void Linear_regression(Matrix test_values) 
+{
+	Matrix A(test_values.get_X_size(), test_values.get_X_size(), 0);
+	Matrix F(1, test_values.get_X_size(), 0.0);
+	A[0][0] = test_values.get_Y_size();
+	for (int i = 1; i < test_values.get_X_size(); i++)
+	{
+		for (int j=0; j < test_values.get_Y_size(); j++)
+		{
+			A[0][i] += test_values[j][i];
+		}
+		A[i][0] = A[0][i];
+	}	
+		
+	for (int i = 1; i < test_values.get_X_size(); i++)
+
+	{
+		for (int k = 1; k < test_values.get_X_size(); k++)
+		{
+			for (int j=0; j < test_values.get_Y_size(); j++)
+			{
+				A[i][k] += test_values[j][i] * test_values[j][k];
+			}
+		}
+		
+		
+	}
+
+	cout <<"matrix A "<<endl<< A;
+	
+	for (int j = 0; j < test_values.get_Y_size(); j++)
+	{
+		F[0][0] += test_values[j][0];
+	}
+
+	for (int i = 1; i < test_values.get_X_size(); i++)
+	{
+		for (int j = 0; j < test_values.get_X_size(); j++)
+		{
+			
+			F[0][i] += test_values[j][0]*test_values[j][i];
+		}
+	}
+	cout << "f=  "<<F;
+	
+	Matrix result(1, A.get_X_size(),0);
+   result =  A.method_gaussa(F);
+   cout <<"result=  "<< result;
+	cout << "chek answer=  "<<A.chek_answer(F,result).norma();
+
+}
