@@ -37,7 +37,7 @@ Matrix::Matrix(int m,int n)
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
-			M[i][j] = (1 + rand() % 1000)*pow(-1, rand());
+			M[i][j] = (1 + rand() % 100)*pow(-1, rand());
 	}
 
 }
@@ -120,6 +120,22 @@ void Matrix::set_one_matrix()
 		M[i][i] = 1;
 	}
 }
+
+void Matrix::set_gilbert_matrix() 
+{
+	for (int i = 0; i < M_size; i++)
+	{
+
+		for (int j = 0; j < N_size; j++)
+		{
+
+			M[i][j] = 1.0 / (i + j + 1);
+		
+		}
+	
+	}
+}
+
 
 
 Matrix& Matrix::operator=( const Matrix& that)
@@ -291,7 +307,7 @@ Matrix Matrix::method_gaussa(Matrix b)
 
 Matrix Matrix::method_kachmaga(Matrix b)
 {
-	const double E = 0.00000000001;
+	const double E = 0.001;
 
 	Matrix x(*this, 0);
 	Matrix x1(1,N_size,0);
@@ -317,7 +333,7 @@ Matrix Matrix::method_kachmaga(Matrix b)
 			j++;
 		else j = 0;
 
-		
+	
 	}
 
 	return x;

@@ -2,34 +2,190 @@
 
 #include<iostream>
 #include"Matrix.h"
+#include <locale>
+#include "windows.h"
+
 
 using namespace std;
 
 int main()
 {
-	/*int N = 4;
-	Matrix test(N, N);
-	Matrix test1(test);
-	Matrix B(1, N);
-	Matrix B1(B);
-	Matrix result(1, N);*/
-	
-	//cin >> test;
-	//cin >> B;
-	//cout << test<<endl;
-	//cout << B<<endl;
-	//result = test.method_gaussa(B);
-	//cout << result;
-	//cout << test1.chek_answer(B1, result).norma() << endl << " +++++++++++++++++++++++++++ " << endl;
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	int choice=1,N;
+	while (choice !=0)
+	{
+		cout << "Оберіть дію" << endl;
+		cout << "1. розв’язання СЛАР " << endl;
+		cout << "2. знаходження власних значень матриці (метод обертання Якобі) " << endl;
+		cout << "3. Знаходження параметрів лінійної регресійної моделі по заданим точкам  " << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+		{	
+			
+			cout << "Оберіть дію" << endl;
+			cout<<"1.Метод Гаусса"<<endl;
+			cout << "2.Метод Качмажа" << endl;
+			cin >> choice;
+			switch (choice)
+			{
+			case 1:
+			{
 
-	int N=20;
-	int M = 5;
-	Matrix coef(1,M);
-	Matrix coef2(N, M,0);
-	cout<< coef;
-	coef2=prepare_test_values(N, coef);
-	cout << coef2<<endl;
-	Linear_regression(coef2);
+				cout << "Оберіть дію" << endl;
+				cout << "1.Ручний ввід матриці" << endl;
+				cout << "2.Автозаповнення матриці випадковими числами" << endl;
+				cin >> choice;
+				cout << "Введіть розмірність матриці  " << endl<<"N = "<<endl;
+				cin >> N;
+				switch (choice)
+				{
+				case 1:
+				{
+					Matrix coef(N, N, 0);
+					cout << "Введіть матрицю коефіцієнтів " << endl;
+					cin >> coef;
+					Matrix B(1, N, 0);
+					cout << "Введіть вільні члени" << endl;
+					cin >> B;
+					cout << "x=";
+					cout<<coef.method_gaussa(B);
+					break;
+				}
+				case 2:
+				{
+					Matrix coef(N, N);
+					cout<< "Матриця коефіцієнтів"<<endl<<coef;
+					Matrix B(1, N);
+					cout<< "Вільні члени "<<endl<<B;
+					cout << "x=";
+					cout << coef.method_gaussa(B);
+					break;
+				}
+				
+				default:
+					break;
+				}
+				break;
+			}
+			case 2:
+			{
+				cout << "Оберіть дію" << endl;
+				cout << "1.Ручний ввід матриці" << endl;
+				cout << "2.Автозаповнення матриці випадковими числами" << endl;
+				cout << "3.Використати матрицю Гільберта з випадковими вільними членами" << endl;
+				cout << "4.Використати матрицю Гільберта з введеними в ручну вільними членами" << endl;
+				cin >> choice;
+				cout << "Введіть розмірність матриці  " << endl << "N = " << endl;
+				cin >> N;
+				switch (choice)
+				{
+				case 1:
+				{
+					Matrix coef(N, N, 0);
+					cout << "Введіть матрицю коефіцієнтів " << endl;
+					cin >> coef;
+					Matrix B(1, N, 0);
+					cout << "Введіть вільні члени" << endl;
+					cin >> B;
+					cout << "x=";
+					cout << coef.method_kachmaga(B);
+					break;
+				}
+				case 2:
+				{
+					Matrix coef(N, N);
+					cout << "Матриця коефіцієнтів " <<endl<<coef<< endl;
+				
+					Matrix B(1, N);
+					cout << "Вільні члени" <<endl<<B<< endl;
+					
+					cout << "x=";
+					cout << coef.method_kachmaga(B);
+					break;
+				}
+				case 3:
+				{
+					Matrix coef(N, N);
+					coef.set_gilbert_matrix();
+					cout << "Матриця коефіцієнтів " << endl << coef << endl;
+					Matrix B(1, N);
+					cout << "Вільні члени" << endl << B << endl;
+					
+
+					cout << "x=";
+					cout << coef.method_kachmaga(B);
+					break;
+				}
+				case 4:
+				{
+					Matrix coef(N, N);
+					coef.set_gilbert_matrix();
+					cout << "Матриця коефіцієнтів " << endl << coef << endl;
+					Matrix B(1, N);
+					cout << "Введіть вільні члени" << endl;
+					cin >> B;
+					
+
+					cout << "x=";
+					cout << coef.method_kachmaga(B);
+					break;
+				}
+				default:
+					break;
+				}
+				break;
+			}
+			default:
+				break;
+			}
+			break;
+		}
+		case 2:
+		{
+			cout << "Оберіть дію" << endl;
+			cout << "1.Ручний ввід матриці" << endl;
+			cout << "2.Автозаповнення матриці випадковими числами" << endl;
+			cin >> choice;
+			cout << "Введіть розмірність матриці  " << endl << "N = " << endl;
+			cin >> N;
+			switch (choice)
+			{
+			case 1:
+			{
+				Matrix coef(N, N, 0);
+				cout << "Введіть матрицю коефіцієнтів " << endl;
+				cin >> coef;
+				cout << coef.method_yakoby();
+				break;
+			}
+			case 2:
+			{
+				Matrix coef(N, N);
+				coef.set_simetrial_matrix();
+				cout << "Матриця коефіцієнтів " << endl << coef << endl;
+				cout << coef.method_yakoby();
+				break;
+			}
+			default:
+				break;
+			}
+			
+			break;
+		}
+		case 3:
+		{
+
+		}
+		default:
+			break;
+
+
+		}
+
+	}
 	system("pause");
 	return 0;
 

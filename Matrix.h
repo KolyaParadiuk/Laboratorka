@@ -21,6 +21,8 @@ public:
 	Matrix(Matrix&,int);
 	void set_simetrial_matrix();
 	void set_one_matrix();
+
+	void set_gilbert_matrix();
 	
 	Matrix& operator =( const Matrix& M1);
 	Matrix & operator=(const double & that);
