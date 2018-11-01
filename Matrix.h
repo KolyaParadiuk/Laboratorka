@@ -19,6 +19,7 @@ public:
 	Matrix(int,int ,double);
 	Matrix(Matrix&);
 	Matrix(Matrix&,int);
+	~Matrix();
 	void set_simetrial_matrix();
 	void set_one_matrix();
 
@@ -35,7 +36,12 @@ public:
 	friend Matrix operator ~(Matrix that);
 	friend ostream & operator<<(ostream & os, const Matrix & that);
 	friend istream & operator>>(istream & os, const Matrix & that);
-	
+
+	Matrix multiplication(Matrix&);
+	Matrix multiplication(double&);
+	Matrix substaction(const Matrix&);
+	Matrix addition( Matrix&);
+
 	double norma();
 	double skal_dob(Matrix&);
 	Matrix chek_answer(Matrix,Matrix);

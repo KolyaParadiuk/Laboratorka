@@ -112,6 +112,10 @@ int main()
 					coef.set_gilbert_matrix();
 					cout << "Ìàòğèöÿ êîåô³ö³ºíò³â " << endl << coef << endl;
 					Matrix B(1, N);
+					for (int i = 0; i < N; i++)
+					{
+						B[0][i] = i+1;
+					}
 					cout << "Â³ëüí³ ÷ëåíè" << endl << B << endl;
 					
 
@@ -177,6 +181,20 @@ int main()
 		}
 		case 3:
 		{
+			int N;
+			int M;
+			cout << "ââåä³òü ê³ëüê³ñòü ïàğàìåòğ³â n";
+			cin >> N;
+
+			//cout << "ââåä³òü êîåô³ö³ºíè b0,b1,...,bn";
+			Matrix B(1,N);
+			cout << B;
+			//cin >> B;
+			cout << "Ââåä³òü ê³ëüê³ñòü òî÷îê";
+			cin >> M;
+			Matrix A(M, N, 0);
+			A=prepare_test_values(M, B);
+			Linear_regression(A);
 
 		}
 		default:
@@ -186,6 +204,16 @@ int main()
 		}
 
 	}
+//int N = 100;
+//Matrix a(N,N);
+//Matrix b(N, N);
+//for (int i = 0; i < 1000000000; i++)
+//{
+//	a.substaction(b);
+//	cout << i;
+//	//a.substaction(b);
+//	//a.addition(b);
+//}
 	system("pause");
 	return 0;
 
