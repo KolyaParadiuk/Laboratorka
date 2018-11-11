@@ -44,27 +44,41 @@ int main()
 				{
 				case 1:
 				{
-					Matrix coef(N, N, 0);
+					Matrix coef(N, N,0);
 					cout << "Ââåä³òü ìàòğèöş êîåô³ö³ºíò³â " << endl;
 					cin >> coef;
 					Matrix B(1, N, 0);
+					Matrix result(1, N, 0);
 					cout << "Ââåä³òü â³ëüí³ ÷ëåíè" << endl;
 					cin >> B;
 					cout << "x=";
-					cout<<coef.method_gaussa(B);
+					coef.method_gaussa(coef,B,result);
+					cout << result;
 					break;
+
 				}
 				case 2:
 				{
 					Matrix coef(N, N);
+					Matrix result(1, N);
 					cout<< "Ìàòğèöÿ êîåô³ö³ºíò³â"<<endl<<coef;
 					Matrix B(1, N);
 					cout<< "Â³ëüí³ ÷ëåíè "<<endl<<B;
-					cout << "x=";
-					cout << coef.method_gaussa(B);
+					
+					coef.method_gaussa(coef,B,result);
+				
+					cout <<endl<< "x=";
+					cout << result << endl;
+
+
+					cout << coef.chek_answer(B, result).norma();
+				
+					
 					break;
 				}
+
 				
+
 				default:
 					break;
 				}
@@ -100,16 +114,22 @@ int main()
 					cout << "Ìàòğèöÿ êîåô³ö³ºíò³â " <<endl<<coef<< endl;
 				
 					Matrix B(1, N);
+					Matrix result(1, N);
 					cout << "Â³ëüí³ ÷ëåíè" <<endl<<B<< endl;
 					
 					cout << "x=";
-					cout << coef.method_kachmaga(B);
+					result=coef.method_kachmaga(B);
+					cout << result;
+					cout << "a*x-b   " <<((coef*result-B).norma())<<endl;
+
+					cout <<"chekanswer   " <<coef.chek_answer(B,result).norma();
 					break;
 				}
 				case 3:
 				{
 					Matrix coef(N, N);
 					coef.set_gilbert_matrix();
+					Matrix result(1, N);
 					cout << "Ìàòğèöÿ êîåô³ö³ºíò³â " << endl << coef << endl;
 					Matrix B(1, N);
 					for (int i = 0; i < N; i++)
@@ -117,10 +137,12 @@ int main()
 						B[0][i] = i+1;
 					}
 					cout << "Â³ëüí³ ÷ëåíè" << endl << B << endl;
-					
-
 					cout << "x=";
-					cout << coef.method_kachmaga(B);
+					result = coef.method_kachmaga(B);
+					cout << result;
+					cout << "a*x-b   " << ((coef*result - B).norma()) << endl;
+
+				
 					break;
 				}
 				case 4:
@@ -182,14 +204,13 @@ int main()
 		case 3:
 		{
 			int N;
-			int M;
-			cout << "ââåä³òü ê³ëüê³ñòü ïàğàìåòğ³â n";
+		 	int M;
+			cout << "ââåä³òü ê³ëüê³ñòü ïàğàìåòğ³â n"<<endl;
 			cin >> N;
 
-			//cout << "ââåä³òü êîåô³ö³ºíè b0,b1,...,bn";
+			cout << "ââåä³òü êîåô³ö³ºíè b0,b1,...,bn";
 			Matrix B(1,N);
-			cout << B;
-			//cin >> B;
+			cin >> B;
 			cout << "Ââåä³òü ê³ëüê³ñòü òî÷îê";
 			cin >> M;
 			Matrix A(M, N, 0);
@@ -204,17 +225,28 @@ int main()
 		}
 
 	}
-//int N = 100;
-//Matrix a(N,N);
-//Matrix b(N, N);
+
+//int N = 3;
+
 //for (int i = 0; i < 1000000000; i++)
+//
 //{
 //	a.substaction(b);
 //	cout << i;
 //	//a.substaction(b);
 //	//a.addition(b);
 //}
-	system("pause");
+
+
+
+//{
+//	Matrix a(N, N);
+//	Matrix b(1, N);
+//		a.multiplication(b);
+//}
+
+
+system("pause");
 	return 0;
 
 

@@ -1,8 +1,11 @@
 #include "Matrix.h"
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
+int Matrix :: counter = 0;
+int Matrix::nomber_of_existing_items = 0;
 bool Matrix::isSimmetrial()
 {
 
@@ -10,7 +13,7 @@ bool Matrix::isSimmetrial()
 	{
 		for (int j = i + 1; j < N_size; j++)
 		{
-			if (this->M[i][j] != this->M[j][i]) 		return false;
+			if (this->M[i][j] != this->M[j][i])  return false;
 		}
 	}
 	return true;
@@ -19,9 +22,13 @@ bool Matrix::isSimmetrial()
 
 Matrix::Matrix()
 {
-	M = NULL;
+	M = nullptr;
 	M_size = 0;
 	N_size = 0;
+	nomber = counter;
+	counter++;
+	nomber_of_existing_items++;
+	//cout << "Matrix created "<<nomber << endl; 
 
 }
 
@@ -30,22 +37,28 @@ Matrix::Matrix(int m,int n)
 
 	M_size = m;
 	N_size = n;
+	nomber = counter;
+	counter++;
+	nomber_of_existing_items++;
 	M = new double*[M_size];
 	for (int i = 0; i < M_size; i++)
 		M[i] = new double[N_size];
-
+	srand(time(0));
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
 			M[i][j] = (1 + rand() % 100)*pow(-1, rand());
 	}
-
+//	cout << "Matrix created " << nomber << endl;
 }
 
 Matrix::Matrix(int m,int n, double c)
 {
 	M_size = m;
 	N_size = n;
+	nomber = counter;
+	counter++; 
+	nomber_of_existing_items++;
 	M = new double*[M_size];
 	if (c == 0)		
 	{
@@ -61,13 +74,16 @@ Matrix::Matrix(int m,int n, double c)
 		for (int j = 0; j < N_size; j++)
 			M[i][j] = c;
 	}
-	
+	//cout << "Matrix created " << nomber << endl;
 }
 
 Matrix::Matrix(Matrix & that )
 {
 	M_size = that.M_size;
 	N_size = that.N_size;
+	nomber = counter;
+	counter++;
+	nomber_of_existing_items++;
 	M = new double*[M_size];
 	for (int i = 0; i < M_size; i++)
 		M[i] = new double[N_size];
@@ -75,16 +91,19 @@ Matrix::Matrix(Matrix & that )
 	for (int i = 0; i < M_size; i++)
 	{
 		for (int j = 0; j < N_size; j++)
-			M[i][j] = that[i][j];
+			M[i][j] = that.M[i][j];
 	}
 
-
+//cout << "Matrix created " << nomber << endl;
 }
 
 Matrix::Matrix(Matrix & that , int k)
 {
 	M_size =1;
 	N_size = that.N_size;
+	nomber = counter;
+	counter++;
+	nomber_of_existing_items++;
 	M = new double*[M_size];
 	
 		M[0] = new double[N_size];
@@ -94,18 +113,49 @@ Matrix::Matrix(Matrix & that , int k)
 			M[0][j] = that[k][j];
 	
 
-
+	//	cout << "Matrix created " << nomber << endl;
 }
 
 Matrix::~Matrix()
 {
-	M_size = 0;
-	N_size = 0;
-	M = new double*[M_size];
-	for (int i = 0; i < M_size; i++)
-		delete M[i];
 
-	delete M;
+	if (M != nullptr)
+	{	
+		for (int i = 0; i < M_size; i++)
+		{
+			
+			if (M[i] != nullptr)
+			delete[] M[i];
+			M[i] = nullptr;
+		}
+		
+		delete[] M;
+		M = nullptr;
+	}
+	
+	nomber_of_existing_items--;
+	//cout << "Matrix deleted " << nomber << endl;
+
+	//cout << "nomber_of_existing_items=  " << nomber_of_existing_items<<endl;
+}
+
+
+void Matrix::dispose()
+{
+
+	for (int i = 0; i < M_size; i++)
+	{
+		delete[] M[i];
+		M[i] = nullptr;
+	}
+		
+
+	delete[] M;
+	M = nullptr;
+	nomber_of_existing_items--;
+	cout << "Matrix deleted " << nomber << endl;
+
+	cout << "nomber_of_existing_items=  " << nomber_of_existing_items << endl;
 }
 
 void Matrix::set_simetrial_matrix()
@@ -164,6 +214,7 @@ Matrix& Matrix::operator=( const Matrix& that)
 
 Matrix& Matrix::operator=(const double& that)
 {
+
 	for (int i = 0; i < this->M_size; i++)
 	{
 		for (int j = 0; j < this->N_size; j++)
@@ -219,14 +270,15 @@ Matrix Matrix::operator-( Matrix & that)
 
 Matrix Matrix::operator*( Matrix & that)
 {
+	Matrix *temp;
 
-	Matrix *temp = new Matrix(that.M_size,that.N_size, 0);
-
-	if (that.M_size == this->M_size && that.N_size == this->N_size)
+	if (this->M_size>1 && this->N_size>1&& that.M_size>1 && that.N_size>1)
 	{
-		for (int i = 0; i < that.M_size; i++)
+		temp = new Matrix(this->M_size,that.N_size, 0);
+
+		for (int i = 0; i < temp->M_size; i++)
 			{
-				for (int j = 0; j < that.N_size; j++)
+				for (int j = 0; j < temp->N_size; j++)
 
 					for (int k = 0; k < that.M_size; k++)
 					{
@@ -236,9 +288,20 @@ Matrix Matrix::operator*( Matrix & that)
 
 
 			}
-	}
 
-	
+	}
+	else
+	{
+		temp = new Matrix(1, that.N_size, 0);
+		for (int i = 0; i < M_size; i++)
+		for (int j = 0; j < N_size; j++)
+		{
+
+			temp->M[0][i] += this->M[i][j] * that.M[0][j];
+
+		}
+
+	}
 	return *temp;
 }
 
@@ -347,42 +410,43 @@ double Matrix::skal_dob(Matrix &that)
 	return temp;
 }
 
-Matrix Matrix::method_gaussa(Matrix b)
+void Matrix::method_gaussa(Matrix that,Matrix b,Matrix &result)
 {
 	double f;
+
 	for (int k = 0; k < N_size-1; k++)
 	{		
 		for (int i = k+1; i < M_size; i++)
 		{
-			f = this->M[k][k] / this->M[i][k];
-			for (int j = 0; j <=N_size; j++)
+			f = that.M[k][k] / that.M[i][k];
+			for (int j = 0; j < N_size; j++)
 			{
-				this->M[i][j] = this->M[i][j]*f - this->M[k][j];
-
+				that.M[i][j] = that.M[i][j]*f - that.M[k][j];
+			
 			}
 			b[0][i] = b[0][i ]*f- b[0][k] ;
+			
 	
 		}
-		
+	
 	}
 	Matrix temp(1, N_size, 0);
 	for (int i = M_size - 1; i > 0; i--)
 	{
-		temp[0][i] = b[0][i] / this->M[i][i];
+		temp[0][i] = b[0][i] / that.M[i][i];
 		for (int j = N_size - 1; j >=i ; j--)
 		{
-			b.M[0][i - 1] = b[0][i-1]- this->M[i - 1][j] * temp[0][j];
+			b.M[0][i - 1] = b[0][i-1]- that.M[i - 1][j] * temp[0][j];
 
 		}
 	}
-	temp[0][0]=b[0][0]/ this->M[0][0];
-
-	return temp;
+	temp[0][0]=b[0][0]/ that.M[0][0];
+	result = temp;
 }
 
 Matrix Matrix::method_kachmaga(Matrix b)
 {
-	const double E = 0.000001;//точность 
+	const double E = 0.00001;//точность 
 
 	Matrix x(*this, 0);//задаю вектор решения х по 0 строке матрицы коэфициэнтов
 	Matrix x1(1,N_size,0);//вспомогательный векор в для временного хранения х 
@@ -399,8 +463,9 @@ Matrix Matrix::method_kachmaga(Matrix b)
 		double temp =  ((b.M[0][j] - ai->skal_dob(x)) / (ai->norma()*ai->norma()));//множтель считается по формуле 
 		
 		ai->multiplication(temp);
-		x1 = ai->addition(x);
-		sub = x1-x;
+		x1 = ai->addition(x );
+		sub = x1;
+		sub.substaction(x);
 		
 		x = x1;
 		if (j < N_size-1)
@@ -408,8 +473,10 @@ Matrix Matrix::method_kachmaga(Matrix b)
 		else j = 0;
 
 		delete ai;
+		//cout<<(this->chek_answer(b,x)).norma()<<endl;
+
 	}
-	cout << this->chek_answer(b, x).norma();
+	// << this->chek_answer(b, x).norma();
 	return x;
 
 }
@@ -645,7 +712,7 @@ void Linear_regression(Matrix test_values)
 		
 	}
 
-	cout <<"matrix A "<<endl<< A;
+	//cout <<"matrix A "<<endl<< A;
 	
 	for (int j = 0; j < test_values.get_Y_size(); j++)
 	{
@@ -663,7 +730,7 @@ void Linear_regression(Matrix test_values)
 	//cout << "f=  "<<F;
 	
 	Matrix result(1, A.get_X_size(),0);
-    result =  A.method_gaussa(F);
+    A.method_gaussa(A,F,result);
     cout <<"result=  " << result;
  //   cout << "chek answer=  "<<A.chek_answer(F,result).norma();
 

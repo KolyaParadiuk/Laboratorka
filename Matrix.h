@@ -10,7 +10,10 @@ private:
 	double **M ;
 	int M_size;
 	int N_size;
+	int nomber;
 
+	static int counter;
+	static int nomber_of_existing_items;
 	bool isSimmetrial();
 
 public: 
@@ -20,6 +23,9 @@ public:
 	Matrix(Matrix&);
 	Matrix(Matrix&,int);
 	~Matrix();
+
+	void dispose();
+
 	void set_simetrial_matrix();
 	void set_one_matrix();
 
@@ -49,7 +55,7 @@ public:
 	int get_X_size();
 	int get_Y_size();
 
-	Matrix method_gaussa(Matrix );
+	void method_gaussa(Matrix ,Matrix, Matrix&);
 	Matrix method_kachmaga(Matrix);
 	double find_fault(double &);
 	void find_max(int &, int &);
