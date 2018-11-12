@@ -120,7 +120,7 @@ int main()
 					cout << "x=";
 					result=coef.method_kachmaga(B);
 					cout << result;
-					cout << "a*x-b   " <<((coef*result-B).norma())<<endl;
+					cout << "a*x-b   " <<((result*coef-B).norma())<<endl;
 
 					cout <<"chekanswer   " <<coef.chek_answer(B,result).norma();
 					break;
@@ -140,7 +140,7 @@ int main()
 					cout << "x=";
 					result = coef.method_kachmaga(B);
 					cout << result;
-					cout << "a*x-b   " << ((coef*result - B).norma()) << endl;
+					cout << "a*x-b   " << ((result*coef - B).norma()) << endl;
 
 				
 					break;
@@ -226,24 +226,6 @@ int main()
 
 	}
 
-//int N = 3;
-
-//for (int i = 0; i < 1000000000; i++)
-//
-//{
-//	a.substaction(b);
-//	cout << i;
-//	//a.substaction(b);
-//	//a.addition(b);
-//}
-
-
-
-//{
-//	Matrix a(N, N);
-//	Matrix b(1, N);
-//		a.multiplication(b);
-//}
 
 
 system("pause");

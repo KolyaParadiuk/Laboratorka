@@ -49,7 +49,7 @@ Matrix::Matrix(int m,int n)
 		for (int j = 0; j < N_size; j++)
 			M[i][j] = (1 + rand() % 100)*pow(-1, rand());
 	}
-//	cout << "Matrix created " << nomber << endl;
+	//cout << "Matrix created " << nomber << endl;
 }
 
 Matrix::Matrix(int m,int n, double c)
@@ -136,7 +136,7 @@ Matrix::~Matrix()
 	nomber_of_existing_items--;
 	//cout << "Matrix deleted " << nomber << endl;
 
-	//cout << "nomber_of_existing_items=  " << nomber_of_existing_items<<endl;
+//	cout << "nomber_of_existing_items=  " << nomber_of_existing_items<<endl;
 }
 
 
@@ -153,9 +153,9 @@ void Matrix::dispose()
 	delete[] M;
 	M = nullptr;
 	nomber_of_existing_items--;
-	cout << "Matrix deleted " << nomber << endl;
+	//cout << "Matrix deleted " << nomber << endl;
 
-	cout << "nomber_of_existing_items=  " << nomber_of_existing_items << endl;
+	//cout << "nomber_of_existing_items=  " << nomber_of_existing_items << endl;
 }
 
 void Matrix::set_simetrial_matrix()
@@ -241,73 +241,59 @@ bool Matrix::operator==( Matrix & that)
 
 Matrix Matrix::operator +( Matrix & that)
 {
-	Matrix *temp=new Matrix(that.M_size,that.N_size, 0);
+	Matrix temp(that.M_size,that.N_size, 0);
 
 	for (int i = 0; i < that.M_size; i++)
 	{
 		for (int j = 0; j < that.N_size; j++)
 
-			temp->M[i][j] =	this->M[i][j] + that.M[i][j];
+			temp.M[i][j] =	this->M[i][j] + that.M[i][j];
 			
 
 	}
-	return *temp;
+	return temp;
 }
 
 Matrix Matrix::operator-( Matrix & that)
 {
-	Matrix *temp=new Matrix(that.M_size, that.N_size ,0);
+	Matrix temp(that.M_size, that.N_size ,0);
 
 	for (int i = 0; i < that.M_size; i++)
 	{
 		for (int j = 0; j < that.N_size; j++)
 
-			temp->M[i][j] = this->M[i][j] - that.M[i][j];
+			temp.M[i][j] = this->M[i][j] - that.M[i][j];
 
 	}
-	return *temp;
+	return temp;
 }
 
 Matrix Matrix::operator*( Matrix & that)
 {
-	Matrix *temp;
 
-	if (this->M_size>1 && this->N_size>1&& that.M_size>1 && that.N_size>1)
-	{
-		temp = new Matrix(this->M_size,that.N_size, 0);
+	
+	Matrix temp(this->M_size, that.N_size,0);
 
-		for (int i = 0; i < temp->M_size; i++)
-			{
-				for (int j = 0; j < temp->N_size; j++)
+		for (int i = 0; i < temp.M_size; i++)
+		{
+			for (int j = 0; j < temp.N_size; j++)
 
-					for (int k = 0; k < that.M_size; k++)
-					{
-						temp->M[i][j] += this->M[i][k] * that.M[k][j];
-					}
+				for (int k = 0; k < that.M_size; k++)
+				{
+					temp.M[i][j] += this->M[i][k] * that.M[k][j];
+				}
 			
 
 
-			}
-
-	}
-	else
-	{
-		temp = new Matrix(1, that.N_size, 0);
-		for (int i = 0; i < M_size; i++)
-		for (int j = 0; j < N_size; j++)
-		{
-
-			temp->M[0][i] += this->M[i][j] * that.M[0][j];
-
 		}
 
-	}
-	return *temp;
+		return temp;
+
 }
 
 Matrix Matrix::operator*( double & that)
 {
-	Matrix *temp =new Matrix(this->M_size, this->N_size, 0);
+	Matrix temp (this->M_size, this->N_size, 0);
 	double k,m;
 	for (int i = 0; i < this->M_size; i++)
 	{
@@ -316,11 +302,11 @@ Matrix Matrix::operator*( double & that)
 		{
 			m = this->M[i][j];
 			k =  m* that;
-			temp->M[i][j] = k;
+			temp.M[i][j] = k;
 		}
 
 	}
-	return *temp;
+	return temp;
 }
 
 double* Matrix::operator[](int i)
@@ -446,7 +432,7 @@ void Matrix::method_gaussa(Matrix that,Matrix b,Matrix &result)
 
 Matrix Matrix::method_kachmaga(Matrix b)
 {
-	const double E = 0.00001;//точность 
+	const double E = 0.0000001;//точность 
 
 	Matrix x(*this, 0);//задаю вектор решения х по 0 строке матрицы коэфициэнтов
 	Matrix x1(1,N_size,0);//вспомогательный векор в для временного хранения х 
@@ -556,9 +542,15 @@ Matrix Matrix::method_yakoby()
 			this->find_max(maxI, maxJ);
 			this->prepare_turn_matrix(maxI,maxJ,turn_matr);
 			temp = 0.0;
-			temp = (~turn_matr)*(*this);
+			{
+				temp = (~turn_matr)*(*this);
+			}
+			
 			*this = 0;
-			*this = temp * turn_matr;
+			{
+				*this = temp * turn_matr;
+			}
+			
 		
 			this->find_fault(fault);
 		}
